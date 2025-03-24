@@ -42,14 +42,14 @@ from sklearn.metrics import  mean_absolute_error
 from transformers.optimization import Adafactor
 # from tabulate import tabulate
 import os, sys
-sys.path.append('/path-to/early-stopping-pytorch')
-from pytorchtools import EarlyStopping
+#sys.path.append('/path-to/early-stopping-pytorch')
+from early import EarlyStopping
 import glob
 
 import math
 # % matplotlib inline
 import os
-torch.cuda.set_device(1)
+torch.cuda.set_device(0)
 # os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID" 
 # os.environ["CUDA_VISIBLE_DEVICES"]="1"
 CUDA_LAUNCH_BLOCKING=1
@@ -82,10 +82,10 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 # Default dataset files
 # import pandas as pd
-data_dir = '/path-to/images'
-train_path = '/path-to/hvvexp_train.csv'
-dev_path = '/path-to/hvvexp_val.csv'
-test_path = '/path-to/hvvexp_test.csv'
+data_dir = '/content/drive/MyDrive/HVV_EXPGEN_DATASET/Train_Val_Images'
+train_path = '/content/drive/MyDrive/HVV_EXPGEN_DATASET/hvvexp_train.csv'
+dev_path = '/content/drive/MyDrive/HVV_EXPGEN_DATASET/hvvexp_val.csv'
+test_path = '/content/drive/MyDrive/HVV_EXPGEN_DATASET/hvvexp_test.csv'
 
 
 
@@ -154,7 +154,7 @@ class HarmemeMemesDatasetAug(torch.utils.data.Dataset):
         ocr = self.samples_frame.loc[idx, "OCR"]
         ent = self.samples_frame.loc[idx, "entity"]
         role = self.samples_frame.loc[idx, "role"]
-        caption = self.samples_frame.loc[idx, "caption"]
+        caption = self.samples_frame.loc[idx, "explanation"]
         
         bert_inputs_ocr = ocr
         bert_inputs_ent = ent
@@ -294,8 +294,8 @@ model.to(device)
 
 code_prof = False
 
-exp_name = "name-of-experiment"
-exp_path = "/path-to-saved-model/"+exp_name
+exp_name = "LUMEN"
+exp_path = "/content/drive/MyDrive/"+exp_name
 
 criterion = nn.CrossEntropyLoss()
 
@@ -540,7 +540,7 @@ def train_model(model, patience, n_epochs):
         
 
     
-train = False
+train = True
 
 if train:
     n_epochs = 15
